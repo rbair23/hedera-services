@@ -30,7 +30,7 @@ mkdir unused 2>/dev/null
 mv *.pfx unused 2>/dev/null
 rmdir unused 2>/dev/null
 
-# When gen_steram_key is set to 1, an extra pair of key used for streaming will be generated
+# When gen_stream_key is set to 1, an extra pair of key used for streaming will be generated
 # and added to keystore
 
 gen_stream_key=1
@@ -42,10 +42,10 @@ for nm in "${names[@]}"; do
    keytool    -genkeypair -alias "e-$n" -keystore "private-$n.pfx" -storetype "pkcs12" -storepass "password" -dname "cn=e-$n" -keyalg "ec" -sigalg "SHA384withECDSA" -keysize "384" -validity "36500"
    keytool    -certreq    -alias "a-$n" -keystore "private-$n.pfx" -storetype "pkcs12" -storepass "password"  |
       keytool -gencert    -alias "s-$n" -keystore "private-$n.pfx" -storetype "pkcs12" -storepass "password" -validity "36500"  |
-      keytool -importcert -alias "a-$n" -keystore "private-$n.pfx" -storetype "pkcs12" -storepass "password" 
+      keytool -importcert -alias "a-$n" -keystore "private-$n.pfx" -storetype "pkcs12" -storepass "password"
    keytool    -certreq    -alias "e-$n" -keystore "private-$n.pfx" -storetype "pkcs12" -storepass "password"  |
       keytool -gencert    -alias "s-$n" -keystore "private-$n.pfx" -storetype "pkcs12" -storepass "password" -validity "36500"  |
-      keytool -importcert -alias "e-$n" -keystore "private-$n.pfx" -storetype "pkcs12" -storepass "password" 
+      keytool -importcert -alias "e-$n" -keystore "private-$n.pfx" -storetype "pkcs12" -storepass "password"
    keytool    -exportcert -alias "s-$n" -keystore "private-$n.pfx" -storetype "pkcs12" -storepass "password"  |
       keytool -importcert -alias "s-$n" -keystore "public.pfx"     -storetype "pkcs12" -storepass "password"  -noprompt
    keytool    -exportcert -alias "a-$n" -keystore "private-$n.pfx" -storetype "pkcs12" -storepass "password"  |

@@ -2,21 +2,21 @@
 
 The child folders in this directory hold configuration
 for various environments, for use with the **upcoming release of Services**. 
-Each configuration file is described a small sub-section below. 
+Each configuration file is described in a small sub-section below. 
 
 All deployment paths are given relative to the top-level directory 
 containing the deployed JAR (in DevOps-managed environments, this 
-is _/opt/hgcapp/services-hedera/HapiApp2.0_.) If no deployment 
+is `/opt/hgcapp/services-hedera/HapiApp2.0`.) If no deployment 
 path is given, the file belongs in the top-level directory with the JAR.
 
 ## bootstrap.properties
-* Deployed as _data/config/bootstrap.properties_
+* Deployed as `data/config/bootstrap.properties`
 * Normally used with networks **not** starting from a saved state
 * Contains overrides used at network startup
   - For example, more permissive bootstrap throttles
 
 ## application.properties
-* Deployed as _data/config/application.properties_
+* Deployed as `data/config/application.properties`
 * Genesis contents of file `0.0.121` 
   - :information_desk_person: &nbsp; Only relevant for networks **not** starting from a saved state 
 
@@ -27,7 +27,7 @@ path is given, the file belongs in the top-level directory with the JAR.
 * If present, should be used, post-upgrade, as input to a yahcli `sysfiles upload properties` command
 
 ## api-permission.properties
-* Deployed as _data/config/api-permission.properties_
+* Deployed as `data/config/api-permission.properties`
 * Genesis contents of file `0.0.122` 
   - :information_desk_person: &nbsp; Only relevant for networks **not** starting from a saved state 
 
@@ -38,7 +38,7 @@ path is given, the file belongs in the top-level directory with the JAR.
 * If present, should be used, post-upgrade, as input to a yahcli `sysfiles upload permissions` command
 
 ## node.properties
-* Deployed as _data/config/node.properties_
+* Deployed as `data/config/node.properties`
 * Contains overrides of node-level configuration
   - For example, more permissive Netty HTTP/2 settings
 

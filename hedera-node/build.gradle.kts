@@ -84,48 +84,44 @@ tasks.processResources {
     }
 }
 
-// Copy dependencies into `data/lib`
-val copyLib = tasks.register<Copy>("copyLib") {
-    from(project.configurations.getByName("runtimeClasspath"))
-    into(File(project.projectDir, "data/lib"))
+val runDir = File(project.buildDir, "run");
+
+// Copy files from "local" into `build/run`
+val copyLocal = tasks.register<Copy>("copyLocal") {
+    from(File(projectDir, "local"))
+    into(runDir)
     shouldRunAfter(tasks.assemble)
 }
 
-// Copy built jar into `data/apps` and rename HederaNode.jar
+// Copy dependencies into `build/run/data/lib`
+val copyLib = tasks.register<Copy>("copyLib") {
+    from(project.configurations.getByName("runtimeClasspath"))
+    into(File(runDir, "data/lib"))
+    dependsOn(copyLocal)
+}
+
+// Copy built jar into `build/run/data/apps` and rename HederaNode.jar
 val copyApp = tasks.register<Copy>("copyApp") {
     from(tasks.jar)
-    into("data/apps")
+    into(File(runDir, "data/apps"))
     rename { "HederaNode.jar" }
-    shouldRunAfter(tasks.assemble)
+    dependsOn(copyLocal)
 }
 
 tasks.assemble {
-    dependsOn(copyApp)
     dependsOn(copyLib)
+    dependsOn(copyApp)
 }
 
 // Create the "run" task for running a Hedera consensus node
 tasks.register<JavaExec>("run") {
-    dependsOn(tasks.findByName("copyApp"), tasks.findByName("copyLib"))
-    classpath("data/apps/HederaNode.jar")
+    dependsOn(tasks.assemble)
+    classpath(File(runDir, "data/apps/HederaNode.jar"))
+    workingDir(runDir)
 }
 
 val cleanRun = tasks.register("cleanRun") {
-    project.delete(File(project.projectDir, "database"))
-    project.delete(File(project.projectDir, "output"))
-    project.delete(File(project.projectDir, "settingsUsed.txt"))
-    project.delete(File(project.projectDir, "swirlds.jar"))
-    project.projectDir.list { _, fileName -> fileName.startsWith("MainNetStats") }
-        ?.forEach { file ->
-            project.delete(file)
-        }
-
-    val dataDir = File(project.projectDir, "data")
-    project.delete(File(dataDir, "accountBalances"))
-    project.delete(File(dataDir, "apps"))
-    project.delete(File(dataDir, "lib"))
-    project.delete(File(dataDir, "recordstreams"))
-    project.delete(File(dataDir, "saved"))
+    project.delete(runDir)
 }
 
 tasks.clean {
